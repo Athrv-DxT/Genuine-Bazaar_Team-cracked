@@ -49,6 +49,50 @@ class GDELTService:
             logger.error(f"Unexpected error with GDELT for {keyword}: {e}")
             return None
     
+    def _validate_trend_data(self, data: Dict, keyword: str) -> bool:
+        """Validate that the data represents a genuine trending keyword"""
+        try:
+            if "timeline" not in data:
+                return False
+            
+            timeline = data["timeline"]
+            if not isinstance(timeline, list) or len(timeline) == 0:
+                return False
+            
+            item = timeline[0]
+            if not isinstance(item, dict) or "data" not in item:
+                return False
+            
+            data_list = item["data"]
+            if not isinstance(data_list, list) or len(data_list) < 7:
+                return False
+            
+            values = [d.get("value", 0) for d in data_list if isinstance(d, dict) and d.get("value", 0) > 0]
+            
+            if len(values) < 7:
+                return False
+            
+            max_val = max(values)
+            avg_val = sum(values) / len(values)
+            recent_vals = values[-7:]
+            recent_avg = sum(recent_vals) / len(recent_vals)
+            recent_val = values[-1]
+            
+            has_min_volume = max_val > 0.05
+            has_recent_activity = recent_val > 0.01
+            is_above_average = recent_avg >= avg_val * 0.9
+            
+            is_valid = has_min_volume and has_recent_activity and is_above_average
+            
+            if not is_valid:
+                logger.debug(f"Keyword '{keyword}' failed validation: volume={has_min_volume}, activity={has_recent_activity}, above_avg={is_above_average}")
+            
+            return is_valid
+            
+        except Exception as e:
+            logger.error(f"Error validating trend data for '{keyword}': {e}")
+            return False
+    
     def get_trend_score(
         self,
         keyword: str,
@@ -60,6 +104,10 @@ class GDELTService:
             if not data:
                 return None
             
+            if not self._validate_trend_data(data, keyword):
+                logger.info(f"Keyword '{keyword}' did not pass validation - not a genuine trend")
+                return None
+            
             score = None
             
             if "timeline" in data:
@@ -69,39 +117,29 @@ class GDELTService:
                         if isinstance(item, dict) and "data" in item:
                             data_list = item["data"]
                             if isinstance(data_list, list) and len(data_list) > 0:
-                                latest = data_list[-1]
-                                if isinstance(latest, dict):
-                                    volume = latest.get("value", 0)
-                                    if volume and volume > 0:
-                                        if volume < 10:
-                                            score = min(100, max(10, int(volume * 100)))
+                                values = [d.get("value", 0) for d in data_list if isinstance(d, dict) and d.get("value", 0) > 0]
+                                if values:
+                                    recent_val = values[-1]
+                                    recent_avg = sum(values[-7:]) / min(7, len(values))
+                                    overall_avg = sum(values) / len(values)
+                                    
+                                    if recent_val > 0:
+                                        if recent_val < 10:
+                                            base_score = int(recent_val * 100)
                                         else:
-                                            score = min(100, max(10, int(volume)))
-                                        logger.info(f"GDELT extracted value {volume} -> score {score} for '{keyword}'")
+                                            base_score = int(recent_val)
+                                        
+                                        if recent_avg > overall_avg * 1.1:
+                                            score = min(100, max(20, base_score + 20))
+                                        elif recent_avg > overall_avg:
+                                            score = min(100, max(15, base_score + 10))
+                                        else:
+                                            score = min(100, max(10, base_score))
+                                        
+                                        logger.info(f"GDELT extracted value {recent_val:.4f} -> score {score} for '{keyword}'")
                                         break
             
-            if score is None and "data" in data:
-                data_list = data["data"]
-                if isinstance(data_list, list) and len(data_list) > 0:
-                    latest = data_list[-1]
-                    if isinstance(latest, dict):
-                        volume = latest.get("value") or latest.get("Volume") or latest.get("volume", 0)
-                        if volume and volume > 0:
-                            score = min(100, max(10, int(volume * 100) if volume < 1 else int(volume)))
-            
-            if score is None and isinstance(data, list) and len(data) > 0:
-                latest = data[-1]
-                if isinstance(latest, dict):
-                    volume = latest.get("value") or latest.get("Volume") or latest.get("volume", 0)
-                    if volume and volume > 0:
-                        score = min(100, max(10, int(volume * 100) if volume < 1 else int(volume)))
-            
-            if score is None:
-                if data and len(str(data)) > 10:
-                    score = 30
-                    logger.info(f"GDELT returned data for '{keyword}', using baseline score")
-            
-            if score:
+            if score and score > 0:
                 logger.info(f"GDELT trend score for '{keyword}': {score}")
                 return score
             
@@ -123,7 +161,7 @@ class GDELTService:
             try:
                 score = self.get_trend_score(keyword, country)
                 
-                if score is not None and score > 0:
+                if score is not None and score >= 15:
                     trends.append({
                         "keyword": keyword,
                         "trend_score": score,
@@ -149,9 +187,13 @@ class GDELTService:
             if not data:
                 return None
             
+            if not self._validate_trend_data(data, keyword):
+                logger.info(f"Keyword '{keyword}' search failed validation")
+                return None
+            
             score = self.get_trend_score(keyword, country)
             
-            if score is None:
+            if score is None or score < 15:
                 return None
             
             return {

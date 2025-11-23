@@ -92,24 +92,19 @@ async def search_keyword_trends(
     current_user: User = Depends(get_current_active_user),
     db: Session = Depends(get_db)
 ):
-    """Search for trends for a specific keyword using GDELT"""
     gdelt_service = GDELTService()
     location = current_user.location_country or "IN"
+    
+    if len(keyword.strip()) < 3:
+        raise HTTPException(status_code=400, detail="Keyword must be at least 3 characters")
     
     result = gdelt_service.search_keyword(keyword, country=location)
     
     if not result:
-        # Return a fallback result with estimated score
-        import hashlib
-        # Generate a consistent score based on keyword hash
-        score = 30 + (hash(keyword.lower()) % 50)
-        return {
-            "keyword": keyword,
-            "location": location,
-            "trend_score": score,
-            "status": "rising" if score < 60 else "trending",
-            "source": "estimated"
-        }
+        raise HTTPException(
+            status_code=404, 
+            detail=f"No genuine trend data found for '{keyword}'. The keyword may not be trending or may not exist in news sources."
+        )
     
     return {
         "keyword": keyword,
