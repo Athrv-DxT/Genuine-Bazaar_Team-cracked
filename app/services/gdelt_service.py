@@ -78,9 +78,9 @@ class GDELTService:
             recent_avg = sum(recent_vals) / len(recent_vals)
             recent_val = values[-1]
             
-            has_min_volume = max_val > 0.05
-            has_recent_activity = recent_val > 0.01
-            is_above_average = recent_avg >= avg_val * 0.9
+            has_min_volume = max_val > 0.03
+            has_recent_activity = recent_val > 0.005
+            is_above_average = recent_avg >= avg_val * 0.85
             
             is_valid = has_min_volume and has_recent_activity and is_above_average
             
