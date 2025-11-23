@@ -73,7 +73,11 @@ class GDELTService:
                                 if isinstance(latest, dict):
                                     volume = latest.get("value", 0)
                                     if volume and volume > 0:
-                                        score = min(100, max(10, int(volume * 100)))
+                                        if volume < 10:
+                                            score = min(100, max(10, int(volume * 100)))
+                                        else:
+                                            score = min(100, max(10, int(volume)))
+                                        logger.info(f"GDELT extracted value {volume} -> score {score} for '{keyword}'")
                                         break
             
             if score is None and "data" in data:
