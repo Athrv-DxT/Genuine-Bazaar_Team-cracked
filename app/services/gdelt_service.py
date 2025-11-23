@@ -185,15 +185,46 @@ class GDELTService:
             data = self.fetch_gdelt_trends(keyword, country)
             
             if not data:
+                logger.info(f"No data returned for keyword '{keyword}'")
                 return None
             
             if not self._validate_trend_data(data, keyword):
                 logger.info(f"Keyword '{keyword}' search failed validation")
                 return None
             
-            score = self.get_trend_score(keyword, country)
+            score = None
+            
+            if "timeline" in data:
+                timeline = data["timeline"]
+                if isinstance(timeline, list) and len(timeline) > 0:
+                    for item in timeline:
+                        if isinstance(item, dict) and "data" in item:
+                            data_list = item["data"]
+                            if isinstance(data_list, list) and len(data_list) > 0:
+                                values = [d.get("value", 0) for d in data_list if isinstance(d, dict) and d.get("value", 0) > 0]
+                                if values:
+                                    recent_val = values[-1]
+                                    recent_avg = sum(values[-7:]) / min(7, len(values))
+                                    overall_avg = sum(values) / len(values)
+                                    
+                                    if recent_val > 0:
+                                        if recent_val < 10:
+                                            base_score = int(recent_val * 100)
+                                        else:
+                                            base_score = int(recent_val)
+                                        
+                                        if recent_avg > overall_avg * 1.1:
+                                            score = min(100, max(20, base_score + 20))
+                                        elif recent_avg > overall_avg:
+                                            score = min(100, max(15, base_score + 10))
+                                        else:
+                                            score = min(100, max(10, base_score))
+                                        
+                                        logger.info(f"GDELT search extracted value {recent_val:.4f} -> score {score} for '{keyword}'")
+                                        break
             
             if score is None or score < 10:
+                logger.info(f"Keyword '{keyword}' score too low or invalid: {score}")
                 return None
             
             return {
@@ -205,4 +236,6 @@ class GDELTService:
             }
         except Exception as e:
             logger.error(f"Error searching keyword {keyword}: {e}")
+            import traceback
+            traceback.print_exc()
             return None
