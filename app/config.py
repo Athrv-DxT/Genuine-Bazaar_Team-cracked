@@ -29,6 +29,7 @@ class Settings(BaseSettings):
     openweather_api_key: Optional[str] = os.getenv("OPENWEATHER_API_KEY")
     calendarific_api_key: Optional[str] = os.getenv("CALENDARIFIC_API_KEY")
     twitter_bearer_token: Optional[str] = os.getenv("TWITTER_BEARER_TOKEN")
+    newsapi_api_key: Optional[str] = os.getenv("NEWSAPI_API_KEY")
     
     # CORS
     cors_origins: list = ["*"]  # Configure for production

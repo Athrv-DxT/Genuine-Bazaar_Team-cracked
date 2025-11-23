@@ -92,40 +92,26 @@ async def search_keyword_trends(
     current_user: User = Depends(get_current_active_user),
     db: Session = Depends(get_db)
 ):
-    from app.services.trends_service import TrendsService
+    from app.services.newsapi_service import NewsAPIService
     
     keyword = keyword.strip()
     if len(keyword) < 3:
         raise HTTPException(status_code=400, detail="Keyword must be at least 3 characters")
     
-    location = current_user.location_country or "IN"
-    geo_code = "IN" if location == "IN" else location
+    newsapi_service = NewsAPIService()
+    result = newsapi_service.search_trend(keyword, days=7)
     
-    gdelt_service = GDELTService()
-    result = gdelt_service.search_keyword(keyword, country=geo_code)
+    if not result:
+        raise HTTPException(
+            status_code=500,
+            detail="Error fetching trend data. Please try again later."
+        )
     
-    if result:
-        return {
-            "keyword": keyword,
-            "location": location,
-            "trend_score": result.get("trend_score", 0),
-            "status": result.get("status", "rising"),
-            "source": result.get("source", "gdelt")
-        }
-    
-    trends_service = TrendsService()
-    google_score = trends_service.get_trend_score(keyword, geo=geo_code)
-    
-    if google_score and google_score > 0:
-        return {
-            "keyword": keyword,
-            "location": location,
-            "trend_score": google_score,
-            "status": "trending" if google_score > 50 else "rising",
-            "source": "google_trends"
-        }
-    
-    raise HTTPException(
-        status_code=404, 
-        detail=f"No trend data found for '{keyword}'. Try searching for popular product keywords."
-    )
+    return {
+        "keyword": result.get("keyword", keyword),
+        "trend_score": result.get("score", 0),
+        "articles": result.get("articles", 0),
+        "status": result.get("status", "low"),
+        "source": result.get("source", "newsapi"),
+        "location": current_user.location_country or "IN"
+    }

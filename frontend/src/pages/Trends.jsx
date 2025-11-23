@@ -71,8 +71,9 @@ export default function Trends() {
       if (error.response?.status === 404) {
         setSearchResults({
           keyword: searchKeyword.trim(),
-          error: error.response?.data?.detail || 'No genuine trend data found. This keyword may not be trending or may not exist in news sources.',
+          error: error.response?.data?.detail || 'No trend data found for this keyword.',
           trend_score: 0,
+          articles: 0,
           status: 'none',
           source: 'none'
         })
@@ -81,6 +82,7 @@ export default function Trends() {
           keyword: searchKeyword.trim(),
           error: error.response?.data?.detail || 'Invalid keyword. Please enter at least 3 characters.',
           trend_score: 0,
+          articles: 0,
           status: 'none',
           source: 'none'
         })
@@ -89,6 +91,7 @@ export default function Trends() {
           keyword: searchKeyword.trim(),
           error: 'Error connecting to trend service. Please try again later.',
           trend_score: 0,
+          articles: 0,
           status: 'none',
           source: 'none'
         })
@@ -167,7 +170,7 @@ export default function Trends() {
                   <div>
                     <p className="search-error">❌ {searchResults.error}</p>
                     <p style={{ marginTop: '12px', fontSize: '13px', color: '#666' }}>
-                      Try searching for real product keywords like: smartphone, laptop, headphones, t-shirt, jeans, etc.
+                      Try searching for real product keywords like: smartphone, laptop, headphones, cake, pizza, etc.
                     </p>
                   </div>
                 ) : (
@@ -181,7 +184,12 @@ export default function Trends() {
                       </div>
                       <span className="score-value">{Math.round(searchResults.trend_score || 0)}/100</span>
                     </div>
-                    <p className="search-source">Source: {searchResults.source || 'GDELT'}</p>
+                    {searchResults.articles !== undefined && (
+                      <p style={{ marginTop: '12px', fontSize: '14px', color: 'var(--text-secondary)' }}>
+                        📰 <strong>News mentions (7 days):</strong> {searchResults.articles}
+                      </p>
+                    )}
+                    <p className="search-source">Source: {searchResults.source || 'NewsAPI'}</p>
                   </>
                 )}
               </div>
