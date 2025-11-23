@@ -68,16 +68,31 @@ export default function Trends() {
       })
       setSearchResults(response.data)
     } catch (error) {
-      // Even on error, show a result
-      const keyword = searchKeyword.trim()
-      const estimatedScore = 30 + (keyword.length * 3) + (Math.random() * 30)
-      setSearchResults({
-        keyword,
-        trend_score: Math.min(100, estimatedScore),
-        status: estimatedScore > 50 ? 'trending' : 'rising',
-        source: 'estimated',
-        error: null
-      })
+      if (error.response?.status === 404) {
+        setSearchResults({
+          keyword: searchKeyword.trim(),
+          error: error.response?.data?.detail || 'No genuine trend data found. This keyword may not be trending or may not exist in news sources.',
+          trend_score: 0,
+          status: 'none',
+          source: 'none'
+        })
+      } else if (error.response?.status === 400) {
+        setSearchResults({
+          keyword: searchKeyword.trim(),
+          error: error.response?.data?.detail || 'Invalid keyword. Please enter at least 3 characters.',
+          trend_score: 0,
+          status: 'none',
+          source: 'none'
+        })
+      } else {
+        setSearchResults({
+          keyword: searchKeyword.trim(),
+          error: 'Error connecting to trend service. Please try again later.',
+          trend_score: 0,
+          status: 'none',
+          source: 'none'
+        })
+      }
     } finally {
       setSearching(false)
     }
@@ -139,15 +154,22 @@ export default function Trends() {
             </form>
             
             {searchResults && (
-              <div className={`search-result-card ${searchResults.status}`}>
+              <div className={`search-result-card ${searchResults.error ? 'error' : searchResults.status}`}>
                 <div className="search-result-header">
                   <h3>{searchResults.keyword}</h3>
-                  <span className={`trend-badge ${searchResults.status}`}>
-                    {searchResults.status}
-                  </span>
+                  {!searchResults.error && (
+                    <span className={`trend-badge ${searchResults.status}`}>
+                      {searchResults.status}
+                    </span>
+                  )}
                 </div>
                 {searchResults.error ? (
-                  <p className="search-error">{searchResults.error}</p>
+                  <div>
+                    <p className="search-error">❌ {searchResults.error}</p>
+                    <p style={{ marginTop: '12px', fontSize: '13px', color: '#666' }}>
+                      Try searching for real product keywords like: smartphone, laptop, headphones, t-shirt, jeans, etc.
+                    </p>
+                  </div>
                 ) : (
                   <>
                     <div className="trend-score">

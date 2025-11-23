@@ -139,11 +139,11 @@ class GDELTService:
                                         logger.info(f"GDELT extracted value {recent_val:.4f} -> score {score} for '{keyword}'")
                                         break
             
-            if score and score > 0:
+            if score and score >= 10:
                 logger.info(f"GDELT trend score for '{keyword}': {score}")
                 return score
             
-            logger.warning(f"No valid trend score extracted for keyword: {keyword}")
+            logger.warning(f"No valid trend score extracted for keyword: {keyword} (score: {score})")
             return None
             
         except Exception as e:
@@ -161,7 +161,7 @@ class GDELTService:
             try:
                 score = self.get_trend_score(keyword, country)
                 
-                if score is not None and score >= 15:
+                if score is not None and score >= 10:
                     trends.append({
                         "keyword": keyword,
                         "trend_score": score,
@@ -193,7 +193,7 @@ class GDELTService:
             
             score = self.get_trend_score(keyword, country)
             
-            if score is None or score < 15:
+            if score is None or score < 10:
                 return None
             
             return {
