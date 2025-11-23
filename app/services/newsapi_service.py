@@ -3,7 +3,6 @@ import os
 import requests
 from typing import Dict, Optional
 from datetime import datetime, timedelta
-from app.config import settings
 
 logger = logging.getLogger(__name__)
 
