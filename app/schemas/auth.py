@@ -13,7 +13,7 @@ class UserRegister(BaseModel):
     password: str
     full_name: str
     business_name: Optional[str] = None
-    market_categories: List[str] = []  # List of MarketCategory values
+    market_categories: List[str] = []
     location_city: Optional[str] = None
     location_state: Optional[str] = None
     location_country: str = "IN"

@@ -28,12 +28,12 @@
 .form-row input:focus {
   outline: none;
   border-color: var(--primary);
-  box-shadow: 0 0 0 3px rgba(99, 102, 241, 0.1);
+  box-shadow: 0 0 0 3px rgba(30, 64, 175, 0.1);
 }
 
 .form-row button {
   padding: 14px 28px;
-  background: linear-gradient(135deg, var(--primary) 0%, var(--primary-dark) 100%);
+  background: var(--primary);
   color: white;
   border: none;
   border-radius: var(--radius);
@@ -49,6 +49,7 @@
 .form-row button:hover:not(:disabled) {
   transform: translateY(-2px);
   box-shadow: var(--shadow-lg);
+  background: var(--primary-dark);
 }
 
 .form-row button:disabled {
@@ -61,56 +62,61 @@
   gap: 16px;
 }
 
-.keyword-card {
+.keyword-item {
   background: var(--bg-primary);
-  padding: 24px;
+  padding: 20px 24px;
   border-radius: var(--radius-lg);
   box-shadow: var(--shadow-md);
+  border: 1px solid var(--border);
   display: flex;
   justify-content: space-between;
   align-items: center;
-  border: 1px solid var(--border);
   transition: all 0.3s ease;
 }
 
-.keyword-card:hover {
+.keyword-item:hover {
   transform: translateX(4px);
   box-shadow: var(--shadow-lg);
-  border-left: 4px solid var(--primary);
+  border-color: var(--primary-light);
 }
 
-.keyword-card h4 {
+.keyword-info {
+  flex: 1;
+}
+
+.keyword-info h4 {
   color: var(--text-primary);
-  margin: 0 0 6px 0;
-  font-size: 20px;
+  margin-bottom: 6px;
+  font-size: 18px;
   font-weight: 600;
-  text-transform: capitalize;
 }
 
-.category {
+.keyword-info p {
   color: var(--text-secondary);
   font-size: 14px;
   margin: 0;
+  text-transform: capitalize;
 }
 
-.delete-btn {
-  padding: 10px 20px;
-  background: linear-gradient(135deg, var(--danger) 0%, #dc2626 100%);
-  color: white;
-  border: none;
+.delete-button {
+  padding: 8px 16px;
+  background: #fee2e2;
+  color: #991b1b;
+  border: 1px solid #fecaca;
   border-radius: var(--radius);
+  font-size: 13px;
+  font-weight: 600;
   cursor: pointer;
   transition: all 0.3s ease;
-  font-weight: 600;
   text-transform: uppercase;
   letter-spacing: 0.5px;
-  font-size: 12px;
-  box-shadow: var(--shadow-md);
 }
 
-.delete-btn:hover {
+.delete-button:hover {
+  background: var(--danger);
+  color: white;
   transform: translateY(-2px);
-  box-shadow: var(--shadow-lg);
+  box-shadow: var(--shadow-md);
 }
 
 .no-keywords {
@@ -120,4 +126,11 @@
   text-align: center;
   color: var(--text-secondary);
   border: 2px dashed var(--border);
+}
+
+.loading {
+  text-align: center;
+  padding: 60px;
+  color: var(--text-secondary);
+  font-size: 16px;
 }

@@ -1,4 +1,4 @@
-# Retail Cortex 🚀
+# Genuine Bazaar 🚀
 
 AI-powered retail intelligence platform that detects hidden demand peaks and identifies optimal promotion timing windows for retailers.
 
@@ -58,7 +58,7 @@ pip install -r requirements.txt
 
 2. Set environment variables (create `.env` file):
 ```env
-DATABASE_URL=postgresql://user:password@localhost/retail_cortex
+DATABASE_URL=postgresql://user:password@localhost/genuine_bazaar
 SECRET_KEY=your-secret-key-here
 OPENWEATHER_API_KEY=your-openweather-api-key
 CALENDARIFIC_API_KEY=your-calendarific-api-key

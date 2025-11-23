@@ -1,13 +1,13 @@
 services:
   - type: web
-    name: retail-cortex-api
+    name: genuine-bazaar-api
     env: python
     buildCommand: pip install -r requirements.txt
     startCommand: gunicorn -w 4 -k uvicorn.workers.UvicornWorker -b 0.0.0.0:$PORT app.main:app
     envVars:
       - key: DATABASE_URL
         fromDatabase:
-          name: retail-cortex-db
+          name: genuine-bazaar-db
           property: connectionString
       - key: SECRET_KEY
         generateValue: true
@@ -24,13 +24,13 @@ services:
       - key: PORT
         fromService:
           type: web
-          name: retail-cortex-api
+          name: genuine-bazaar-api
           property: port
 
 databases:
-  - name: retail-cortex-db
-    databaseName: retail_cortex
-    user: retail_cortex_user
+  - name: genuine-bazaar-db
+    databaseName: genuine_bazaar
+    user: genuine_bazaar_user
     plan: free
 
 

@@ -21,6 +21,7 @@
   padding: 4px;
   border-radius: var(--radius);
   box-shadow: var(--shadow);
+  border: 1px solid var(--border);
 }
 
 .filter-buttons button {
@@ -41,7 +42,7 @@
 }
 
 .filter-buttons button.active {
-  background: linear-gradient(135deg, var(--primary) 0%, var(--primary-dark) 100%);
+  background: var(--primary);
   color: white;
   box-shadow: var(--shadow-md);
 }
@@ -49,70 +50,141 @@
 .alert-actions {
   display: flex;
   gap: 8px;
+  margin-top: 16px;
 }
 
-.action-btn {
+.action-button {
   padding: 8px 16px;
   border: none;
   border-radius: var(--radius);
-  cursor: pointer;
-  font-size: 12px;
+  font-size: 13px;
   font-weight: 600;
+  cursor: pointer;
   transition: all 0.3s ease;
   text-transform: uppercase;
   letter-spacing: 0.5px;
 }
 
-.action-btn.read {
-  background: linear-gradient(135deg, var(--primary) 0%, var(--primary-dark) 100%);
-  color: white;
-}
-
-.action-btn.read:hover {
-  transform: translateY(-2px);
-  box-shadow: var(--shadow-md);
-}
-
-.action-btn.acted {
-  background: linear-gradient(135deg, var(--success) 0%, #059669 100%);
-  color: white;
-}
-
-.action-btn.acted:hover {
-  transform: translateY(-2px);
-  box-shadow: var(--shadow-md);
-}
-
-.keyword {
-  color: var(--primary);
-  font-weight: 600;
-  margin-top: 12px;
-  display: inline-block;
-  padding: 4px 12px;
-  background: rgba(99, 102, 241, 0.1);
-  border-radius: 12px;
-  font-size: 13px;
-}
-
-.context-data {
-  margin-top: 16px;
-  padding: 16px;
+.action-button.mark-read {
   background: var(--bg-secondary);
-  border-radius: var(--radius);
+  color: var(--primary);
+  border: 1px solid var(--primary);
+}
+
+.action-button.mark-read:hover {
+  background: var(--primary);
+  color: white;
+}
+
+.action-button.delete {
+  background: #fee2e2;
+  color: #991b1b;
+  border: 1px solid #fecaca;
+}
+
+.action-button.delete:hover {
+  background: var(--danger);
+  color: white;
+}
+
+.alert-list {
+  display: grid;
+  gap: 16px;
+}
+
+.alert-item {
+  background: var(--bg-primary);
+  padding: 24px;
+  border-radius: var(--radius-lg);
+  box-shadow: var(--shadow-md);
+  border-left: 4px solid var(--primary);
+  transition: all 0.3s ease;
   border: 1px solid var(--border);
 }
 
-.context-data pre {
-  margin-top: 12px;
-  font-size: 12px;
-  color: var(--text-secondary);
-  overflow-x: auto;
-  font-family: 'Fira Code', monospace;
+.alert-item:hover {
+  transform: translateX(4px);
+  box-shadow: var(--shadow-lg);
 }
 
-.timestamp {
-  margin-top: 16px;
-  font-size: 12px;
+.alert-item.high {
+  border-left-color: var(--warning);
+}
+
+.alert-item.urgent {
+  border-left-color: var(--danger);
+}
+
+.alert-item-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 12px;
+}
+
+.alert-type {
+  font-size: 11px;
   color: var(--text-tertiary);
-  font-style: italic;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+  font-weight: 600;
+}
+
+.priority-badge {
+  padding: 6px 14px;
+  border-radius: 20px;
+  font-size: 11px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+.priority-badge.medium {
+  background: #fef3c7;
+  color: #92400e;
+}
+
+.priority-badge.high {
+  background: #fed7aa;
+  color: #9a3412;
+}
+
+.priority-badge.urgent {
+  background: #fee2e2;
+  color: #991b1b;
+}
+
+.alert-item h4 {
+  color: var(--text-primary);
+  margin-bottom: 12px;
+  font-size: 18px;
+  font-weight: 600;
+}
+
+.alert-item p {
+  color: var(--text-secondary);
+  line-height: 1.7;
+  margin-bottom: 12px;
+}
+
+.impact {
+  color: var(--success);
+  font-weight: 700;
+  font-size: 16px;
+}
+
+.no-alerts {
+  background: var(--bg-primary);
+  padding: 60px 40px;
+  border-radius: var(--radius-lg);
+  text-align: center;
+  color: var(--text-secondary);
+  border: 2px dashed var(--border);
+}
+
+.loading {
+  text-align: center;
+  padding: 60px;
+  color: var(--text-secondary);
+  font-size: 16px;
 }

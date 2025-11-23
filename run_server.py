@@ -1,5 +1,5 @@
 """
-Simple script to run the Retail Cortex server
+Simple script to run the Genuine Bazaar server
 """
 import os
 import sys
@@ -11,7 +11,7 @@ def check_env():
         print("[WARNING] No .env file found. Creating one with defaults...")
         with open('.env', 'w') as f:
             f.write("""# Database
-DATABASE_URL=sqlite:///./retail_cortex.db
+DATABASE_URL=sqlite:///./genuine_bazaar.db
 
 # Security
 SECRET_KEY=dev-secret-key-change-in-production
@@ -43,7 +43,7 @@ def init_database():
 
 def main():
     print("=" * 60)
-    print("Retail Cortex - Starting Server")
+    print("Genuine Bazaar - Starting Server")
     print("=" * 60)
     print()
     

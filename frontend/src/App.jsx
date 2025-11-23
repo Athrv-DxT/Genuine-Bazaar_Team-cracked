@@ -17,7 +17,7 @@ function PrivateRoute({ children }) {
       <div className="loading">
         <div style={{ textAlign: 'center' }}>
           <div style={{ fontSize: '48px', marginBottom: '16px' }}>🛍️</div>
-          <div>Loading Retail Cortex...</div>
+          <div>Loading Genuine Bazaar...</div>
         </div>
       </div>
     )

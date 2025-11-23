@@ -1,9 +1,9 @@
 @echo off
-title Retail Cortex - Starting All Services
+title Genuine Bazaar - Starting All Services
 color 0A
 
 echo ======================================================================
-echo                    Retail Cortex - Starting All Services
+echo                    Genuine Bazaar - Starting All Services
 echo ======================================================================
 echo.
 
@@ -12,7 +12,7 @@ echo      URL: http://localhost:8000
 echo      API Docs: http://localhost:8000/docs
 echo.
 
-start "Retail Cortex Backend" cmd /k "cd /d %~dp0 && python run_server.py"
+start "Genuine Bazaar Backend" cmd /k "cd /d %~dp0 && python run_server.py"
 
 echo      Waiting 5 seconds for backend to start...
 timeout /t 5 /nobreak >nul
@@ -28,7 +28,7 @@ if not exist node_modules (
     call npm install
 )
 
-start "Retail Cortex Frontend" cmd /k "cd /d %~dp0frontend && npm run dev"
+start "Genuine Bazaar Frontend" cmd /k "cd /d %~dp0frontend && npm run dev"
 
 cd ..
 

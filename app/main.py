@@ -1,5 +1,5 @@
 """
-Main FastAPI application for Retail Cortex
+Main FastAPI application for Genuine Bazaar
 """
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
@@ -12,7 +12,7 @@ Base.metadata.create_all(bind=engine)
 
 app = FastAPI(
     title=settings.app_name,
-    description="AI-powered retail intelligence platform for demand peak detection and promotion timing",
+    description="Genuine Bazaar - AI-powered retail intelligence platform for demand peak detection and promotion timing",
     version=settings.app_version,
 )
 
@@ -35,7 +35,6 @@ app.include_router(location.router, prefix="/api")
 
 @app.get("/")
 async def root():
-    """Root endpoint"""
     return {
         "name": settings.app_name,
         "version": settings.app_version,
@@ -45,29 +44,25 @@ async def root():
 
 @app.get("/health")
 async def health_check():
-    """Health check endpoint"""
     return {"status": "healthy"}
 
 
 @app.on_event("startup")
 async def startup_event():
-    """Initialize on startup"""
     import logging
     logger = logging.getLogger(__name__)
-    # Start background scheduler
     from app.scheduler import start_scheduler
     start_scheduler()
-    logger.info("Retail Cortex API started")
+    logger.info("Genuine Bazaar API started")
 
 
 @app.on_event("shutdown")
 async def shutdown_event():
-    """Cleanup on shutdown"""
     import logging
     logger = logging.getLogger(__name__)
     from app.scheduler import stop_scheduler
     stop_scheduler()
-    logger.info("Retail Cortex API shutting down")
+    logger.info("Genuine Bazaar API shutting down")
 
 
 if __name__ == "__main__":

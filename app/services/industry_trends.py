@@ -1,7 +1,3 @@
-"""
-Industry-specific trend detection service
-Detects trends for different industries (electronics, clothing, food, etc.)
-"""
 import logging
 from typing import Dict, List, Optional
 from datetime import datetime

@@ -2,7 +2,7 @@
 # Run this in PowerShell: .\create_env.ps1
 
 $envContent = @"
-DATABASE_URL=sqlite:///./retail_cortex.db
+DATABASE_URL=sqlite:///./genuine_bazaar.db
 SECRET_KEY=dev-secret-key-change-in-production
 
 OPENWEATHER_API_KEY=REPLACE_WITH_YOUR_OPENWEATHER_KEY

@@ -20,8 +20,6 @@ router = APIRouter(prefix="/auth", tags=["authentication"])
 
 @router.post("/register", response_model=UserResponse, status_code=status.HTTP_201_CREATED)
 async def register(user_data: UserRegister, db: Session = Depends(get_db)):
-    """Register a new user/retailer"""
-    # Check if user already exists
     existing_user = db.query(User).filter(User.email == user_data.email).first()
     if existing_user:
         raise HTTPException(
@@ -29,14 +27,13 @@ async def register(user_data: UserRegister, db: Session = Depends(get_db)):
             detail="Email already registered"
         )
     
-    # Create new user (password hashing is fast with bcrypt)
     hashed_password = get_password_hash(user_data.password)
     new_user = User(
         email=user_data.email,
         hashed_password=hashed_password,
         full_name=user_data.full_name,
         business_name=user_data.business_name,
-        market_categories=user_data.market_categories or [],
+        market_categories=user_data.market_categories if user_data.market_categories else [],
         location_city=user_data.location_city,
         location_state=user_data.location_state,
         location_country=user_data.location_country,
@@ -53,7 +50,6 @@ async def register(user_data: UserRegister, db: Session = Depends(get_db)):
 
 @router.post("/login", response_model=Token)
 async def login(user_data: UserLogin, db: Session = Depends(get_db)):
-    """Login and get access token"""
     user = authenticate_user(db, user_data.email, user_data.password)
     if not user:
         raise HTTPException(
@@ -78,7 +74,6 @@ async def login(user_data: UserLogin, db: Session = Depends(get_db)):
 async def get_current_user_info(
     current_user: User = Depends(get_current_active_user)
 ):
-    """Get current user information"""
     return current_user
 
 

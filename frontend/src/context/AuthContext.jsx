@@ -45,11 +45,14 @@ export function AuthProvider({ children }) {
 
   const register = async (userData) => {
     const response = await axios.post('/auth/register', userData)
-    // Auto login after registration (non-blocking for better UX)
-    login(userData.email, userData.password).catch(err => {
-      console.error('Auto-login failed:', err)
-      // User can manually login if auto-login fails
+    const loginResponse = await axios.post('/auth/login', { 
+      email: userData.email, 
+      password: userData.password 
     })
+    const { access_token } = loginResponse.data
+    localStorage.setItem('token', access_token)
+    axios.defaults.headers.common['Authorization'] = `Bearer ${access_token}`
+    await fetchUser()
     return response.data
   }
 

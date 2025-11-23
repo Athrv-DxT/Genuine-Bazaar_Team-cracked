@@ -30,7 +30,7 @@ export default function Dashboard() {
     <div className="dashboard">
       <nav className="navbar">
         <div className="nav-content">
-          <h2>Retail Cortex</h2>
+          <h2>Genuine Bazaar</h2>
           <div className="nav-links">
             <button onClick={() => navigate('/dashboard')}>Dashboard</button>
             <button onClick={() => navigate('/alerts')}>Alerts</button>

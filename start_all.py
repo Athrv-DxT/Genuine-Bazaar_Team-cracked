@@ -54,7 +54,7 @@ def check_frontend():
 
 def main():
     print("=" * 70)
-    print(" " * 15 + "Retail Cortex - Starting All Services")
+    print(" " * 15 + "Genuine Bazaar - Starting All Services")
     print("=" * 70)
     print()
     

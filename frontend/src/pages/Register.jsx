@@ -23,7 +23,7 @@ export default function Register() {
     password: '',
     full_name: '',
     business_name: '',
-    market_categories: [],
+    market_category: '',
     location_city: '',
     location_state: '',
     location_country: 'IN'
@@ -75,12 +75,10 @@ export default function Register() {
     })
   }
 
-  const handleCategoryToggle = (category) => {
+  const handleCategoryChange = (category) => {
     setFormData(prev => ({
       ...prev,
-      market_categories: prev.market_categories.includes(category)
-        ? prev.market_categories.filter(c => c !== category)
-        : [...prev.market_categories, category]
+      market_category: category
     }))
   }
 
@@ -138,11 +136,14 @@ export default function Register() {
     setLoading(true)
 
     try {
-      await register(formData)
+      const registrationData = {
+        ...formData,
+        market_categories: formData.market_category ? [formData.market_category] : []
+      }
+      await register(registrationData)
       navigate('/dashboard')
     } catch (err) {
       setError(err.response?.data?.detail || 'Registration failed')
-    } finally {
       setLoading(false)
     }
   }
@@ -154,7 +155,7 @@ export default function Register() {
           <div style={{ fontSize: '48px', marginBottom: '8px' }}>🚀</div>
           <h1>Create Account</h1>
         </div>
-        <p className="subtitle">Join Retail Cortex - Start Growing Your Business</p>
+        <p className="subtitle">Join Genuine Bazaar - Your Trusted Retail Intelligence Platform</p>
         <form onSubmit={handleSubmit}>
           {error && <div className="error">{error}</div>}
           
@@ -207,14 +208,17 @@ export default function Register() {
           </div>
           
           <div className="form-group">
-            <label>Market Categories</label>
+            <label>Market Category *</label>
             <div className="category-grid">
               {MARKET_CATEGORIES.map(cat => (
-                <label key={cat} className="checkbox-label">
+                <label key={cat} className="radio-label">
                   <input
-                    type="checkbox"
-                    checked={formData.market_categories.includes(cat)}
-                    onChange={() => handleCategoryToggle(cat)}
+                    type="radio"
+                    name="market_category"
+                    value={cat}
+                    checked={formData.market_category === cat}
+                    onChange={() => handleCategoryChange(cat)}
+                    required
                   />
                   <span>{cat.charAt(0).toUpperCase() + cat.slice(1)}</span>
                 </label>

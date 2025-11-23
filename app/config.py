@@ -1,5 +1,5 @@
 """
-Configuration settings for Retail Cortex
+Configuration settings for Genuine Bazaar
 """
 import os
 from typing import Optional
@@ -10,14 +10,14 @@ class Settings(BaseSettings):
     """Application settings"""
     
     # App
-    app_name: str = "Retail Cortex"
+    app_name: str = "Genuine Bazaar"
     app_version: str = "1.0.0"
     debug: bool = os.getenv("DEBUG", "False").lower() == "true"
     
     # Database
     database_url: str = os.getenv(
         "DATABASE_URL",
-        "sqlite:///./retail_cortex.db"
+        "sqlite:///./genuine_bazaar.db"
     )
     
     # Security

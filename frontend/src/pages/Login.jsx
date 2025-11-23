@@ -31,7 +31,7 @@ export default function Login() {
       <div className="auth-card">
         <div style={{ textAlign: 'center', marginBottom: '8px' }}>
           <div style={{ fontSize: '48px', marginBottom: '8px' }}>🛍️</div>
-          <h1>Retail Cortex</h1>
+          <h1>Genuine Bazaar</h1>
         </div>
         <p className="subtitle">AI-Powered Retail Intelligence Platform</p>
         <form onSubmit={handleSubmit}>
